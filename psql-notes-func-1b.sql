@@ -357,7 +357,7 @@ declare
 	w text;
 	q text :='';
 begin
-	q:='select t.id, sum(tfidf) rank from (';
+	q:='select t.id, round(sum(tfidf), 2) rank from (';
 	foreach w in array searchwords
 loop
 	q := q || 'select distinct on (id, what, word) id, what, word, tfidf from wi_weighted where word = ''';
@@ -393,7 +393,7 @@ begin
 	select tokenizer(searchstr)
 	into wordz;
 	if searchtype='wordstfidf' then
-		q:='select word,sum(rank) from wi, (select id, sum(tfidf) rank from (';
+		q:='select word, sum(rank) from wi, (select id, round(sum(tfidf), 4) rank from (';
 		foreach w in array wordz
 		loop
 			q := q || 'select distinct on (id, what, word) id, what, word, tfidf from wi_weighted where word = ''';
