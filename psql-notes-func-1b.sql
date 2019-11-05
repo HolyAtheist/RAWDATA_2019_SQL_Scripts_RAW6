@@ -357,7 +357,7 @@ declare
 	w text;
 	q text :='';
 begin
-	q:='select t.id, round(sum(tfidf), 2) rank from (';
+	q:='select t.id, round(sum(tfidf), 4) rank from (';
 	foreach w in array searchwords
 loop
 	q := q || 'select distinct on (id, what, word) id, what, word, tfidf from wi_weighted where word = ''';
