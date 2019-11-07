@@ -192,27 +192,34 @@ language plpgsql;
 
 -- added: annotations function
 create or replace function annotate(appuserid integer, ipostid integer, note text)
-returns void as 
+returns integer as 
 $$
 declare
 	bid integer;
 	tabl varchar;
 	existsuser boolean;
+	newAnnotId integer;
 begin
 	select exists_appuser(appuserid) into existsuser;
 	if existsuser=false then
 		RAISE NOTICE 'ERROR: Unknown user -- %', appuserid;
-		return;
+		return null;
 	end if;
 	perform add_history(appuserid, ipostid, true);
 	select resolveid(ipostid) into tabl; -- get table name
 	if tabl!='unknown'
 	then
-		select id from history where userid=appuserid and postid=ipostid and posttablename=tabl and isbookmark=true into bid;
-		insert into annotations (userid, historyid, body, date) values (appuserid, bid, note, CURRENT_TIMESTAMP(3));
-		RAISE NOTICE 'Added note to bookmark.';
+		select id from history 
+		where userid=appuserid and postid=ipostid and posttablename=tabl and isbookmark=true into bid;
+		
+		insert into annotations (userid, historyid, body, date) 
+		values (appuserid, bid, note,CURRENT_TIMESTAMP(3)) RETURNING id into newAnnotId;
+		
+		return newAnnotId;
+		
 	else
 		RAISE NOTICE 'ERROR: Unknown error.';
+		return null;
 	end if;
 end;
 $$ 
