@@ -238,7 +238,9 @@ order by tf.id asc;
 
 CREATE TABLE appusers (
   id SERIAL NOT NULL,   
-  name VARCHAR(255) NOT NULL,
+  username VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR (500) NOT NULL,
+  salt VARCHAR (500) NOT NULL,
   PRIMARY KEY (id)
 );
 
