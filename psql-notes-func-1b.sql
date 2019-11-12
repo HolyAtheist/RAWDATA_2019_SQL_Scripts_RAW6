@@ -436,7 +436,7 @@ language plpgsql;
 -- mother function for searching
 -- added: third parameter: searchtype
 -- added: check user exists
-create or replace function appsearch(appuserid int, searchtype text, searchstr text)
+create or replace function appsearch(appuserid int, searchtype text, searchstr text, internalcaller boolean DEFAULT false)
 returns table (postid integer, rank decimal) as 
 $$
 declare
@@ -445,12 +445,14 @@ declare
     q text :='';
 	existsuser boolean;
 begin
+if internalcaller=false then
 	select exists_appuser(appuserid) into existsuser;
 	if existsuser=false then
 		RAISE NOTICE 'ERROR: Unknown user -- %', appuserid;
 		return;
 	end if;
 	perform addsearchhistory(appuserid, searchtype, searchstr);
+end if;
 	select tokenizer(searchstr)
 	into wordz;
 	if searchtype='tfidf' then
