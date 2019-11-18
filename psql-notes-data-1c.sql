@@ -247,7 +247,7 @@ CREATE TABLE appusers (
 
 CREATE TABLE searches (
   id SERIAL NOT NULL,   
-  userid INTEGER REFERENCES appusers(id),
+  userid INTEGER REFERENCES appusers(id) ON DELETE CASCADE,
   searchtype TEXT,
   searchstring TEXT,
   date TIMESTAMP,
@@ -257,7 +257,7 @@ CREATE TABLE searches (
 
 CREATE TABLE history (
   id SERIAL NOT NULL,  
-  userid INTEGER REFERENCES appusers(id),
+  userid INTEGER REFERENCES appusers(id) ON DELETE CASCADE,
   postid INTEGER,
   posttablename VARCHAR(100),
   date TIMESTAMP,
@@ -268,8 +268,8 @@ CREATE TABLE history (
 
 CREATE TABLE annotations (
   id SERIAL NOT NULL,   
-  userid INTEGER REFERENCES appusers(id),
-  historyid INTEGER REFERENCES history(id),
+  userid INTEGER REFERENCES appusers(id) ON DELETE CASCADE,
+  historyid INTEGER REFERENCES history(id) ON DELETE CASCADE,
   body TEXT,
   date TIMESTAMP,
   PRIMARY KEY (id)
