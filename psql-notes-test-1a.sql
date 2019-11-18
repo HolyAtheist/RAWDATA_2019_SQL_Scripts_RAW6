@@ -35,12 +35,12 @@ select id, tags from posts_universal where id=19;
 
 -- Insert some users for testing
 -- Note: there is no createuser() function or similar yet
-insert into appusers (name) values ('Huey'),('Dewey'),('Louie');
+insert into appusers (username, password, salt) values ('Huey','password','salt'),('Dewey','password','salt'),('Louie','password','salt');
 
 
 -- Before we start, display search history for all users 
 
- select name, searchtype, searchstring, date from appusers
+ select username, searchtype, searchstring, date from appusers
  INNER JOIN searches ON appusers.id=searches.userid
  order by date desc;
 
@@ -145,7 +145,7 @@ select wordrank(2, 'best', 'chocolate') limit 10;
 
 -- After all the searches, display search history for all users
  
-select name, searchtype, searchstring, date from appusers
+select username, searchtype, searchstring, date from appusers
 INNER JOIN searches ON appusers.id=searches.userid
 order by date desc;
 
@@ -184,7 +184,7 @@ select add_history(1, 71, false);
 select add_history(7, 71, true);
 
 -- Show users' history and bookmarks
-select name, postid, posttablename, date, isbookmark from history INNER JOIN appusers ON history.userid=appusers.id
+select username, postid, posttablename, date, isbookmark from history INNER JOIN appusers ON history.userid=appusers.id
 order by date desc;
 
 
@@ -195,7 +195,7 @@ order by date desc;
 --
 
 -- Show users' annotations are empty:
-select name, postid, posttablename, body, annotations.date from annotations, history, appusers where historyid=history.id and history.userid=appusers.id;
+select username, postid, posttablename, body, annotations.date from annotations, history, appusers where historyid=history.id and history.userid=appusers.id;
 
 
 -- Add note: annotate(appuserid integer, ipostid integer, note text)
@@ -210,10 +210,10 @@ select annotate(5, 19, 'wrong userid');
 select annotate(1, 666, 'wrong postid');
 
 -- Show users' annotations
-select name, postid, posttablename, body, annotations.date from annotations, history, appusers where historyid=history.id and history.userid=appusers.id;
+select username, postid, posttablename, body, annotations.date from annotations, history, appusers where historyid=history.id and history.userid=appusers.id;
 
 -- Show users' history and bookmarks
-select name, postid, posttablename, date, isbookmark from history INNER JOIN appusers ON history.userid=appusers.id
+select username, postid, posttablename, date, isbookmark from history INNER JOIN appusers ON history.userid=appusers.id
 order by date desc;
 
 --  ____  _  _  ____  
